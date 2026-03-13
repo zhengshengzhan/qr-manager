@@ -29,24 +29,28 @@ const validateEnvironment = () => {
 const setupDatabase = async () => {
   console.log("🔄 开始设置数据库...");
   console.log(`🔍 检查数据库 "${DATABASE_NAME}" 是否存在...`);
-
-  // 检查数据库是否存在
-  let database = await client.d1.database.get(DATABASE_NAME, {
-    account_id: CLOUDFLARE_ACCOUNT_ID,
-  });
-
-  if (!database || !database.uuid) {
-    console.log("❌ 数据库不存在，开始创建...");
-    database = await client.d1.database.create({
+ 
+  let database;
+  try {
+    // 检查数据库是否存在
+    database = await client.d1.database.get(DATABASE_NAME, {
       account_id: CLOUDFLARE_ACCOUNT_ID,
-      name: DATABASE_NAME,
     });
-
-    console.log(`✅ 数据库 "${DATABASE_NAME}" 创建成功`);
-  } else {
-    console.log(`✅ 数据库 "${DATABASE_NAME}" 已存在`);
+  } catch (error: any) {
+    // 如果数据库不存在（404），开始创建
+    if (error.status === 404 || error.message?.includes('could not be found')) {
+      console.log("❌ 数据库不存在，开始创建...");
+      database = await client.d1.database.create({
+        account_id: CLOUDFLARE_ACCOUNT_ID,
+        name: DATABASE_NAME,
+      });
+    } else {
+      // 其他错误，重新抛出
+      throw error;
+    }
   }
-
+ 
+  console.log("✅ 数据库已设置完成");
   return database;
 };
 
