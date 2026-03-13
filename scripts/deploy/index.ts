@@ -14,7 +14,7 @@ const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN!;
 const CUSTOM_DOMAIN = process.env.CUSTOM_DOMAIN;
 
 const client = new Cloudflare({
-  apiKey: CLOUDFLARE_API_TOKEN,
+  apiToken: CLOUDFLARE_API_TOKEN,
 });
 
 const validateEnvironment = () => {
