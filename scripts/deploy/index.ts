@@ -78,7 +78,12 @@ const setupBucket = async () => {
       console.log(`✅ 存储桶 "${BUCKET_NAME}" 已存在`);
     }
   } catch (error) {
-    throw new Error(`设置 R2 存储桶失败: ${error}`);
+    // R2 需在 Cloudflare 控制台手动启用（绑定支付方式）后才能通过 API 创建。
+    // 未启用时跳过，避免中断整体部署；Logo 上传/展示功能将暂不可用，启用 R2 后重新部署即可恢复。
+    console.warn(
+      `⚠️ 跳过 R2 存储桶创建（R2 可能未在控制台启用，或令牌缺少 R2 权限）: ${error}`
+    );
+    console.warn("⚠️ Logo 上传/展示功能将暂不可用，启用 R2 后重新部署即可恢复。");
   }
 };
 

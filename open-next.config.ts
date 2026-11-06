@@ -1,10 +1,5 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
-import r2IncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/r2-incremental-cache";
 
-export default defineCloudflareConfig({
-  // Uncomment to enable R2 cache,
-  // It should be imported as:
-  // `import r2IncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/r2-incremental-cache";`
-  // See https://opennext.js.org/cloudflare/caching for more details
-  incrementalCache: r2IncrementalCache,
-});
+// 注：R2 增量缓存已临时关闭，因为部署账户尚未在 Cloudflare 控制台启用 R2（需绑定支付方式）。
+// 待启用 R2 后，可恢复 r2IncrementalCache 覆盖并重新加回 wrangler.jsonc 的 r2_buckets 绑定。
+export default defineCloudflareConfig({});

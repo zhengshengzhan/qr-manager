@@ -42,5 +42,8 @@ next-env.d.ts
 .wrangler
 .dev.vars*
 
+# local deploy secrets (do not commit)
+.env.deploy
+
 .idea
 .secrets
