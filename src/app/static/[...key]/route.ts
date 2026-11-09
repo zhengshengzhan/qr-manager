@@ -9,8 +9,7 @@ export async function GET(
   const { key } = await params;
 
   const storage = await createStorage();
-
-  const object = await storage.get(key.join("/"));
+  const object = storage ? await storage.get(key.join("/")) : null;
 
   if (object === null) {
     return NextResponse.json({ message: "File not found" }, { status: 404 });
