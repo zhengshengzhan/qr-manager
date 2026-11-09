@@ -8,9 +8,11 @@ import z from "zod";
 
 const MAX_FILE_SIZE = Number(process.env.NEXT_PUBLIC_MAX_FILE_MB) * 1024 * 1024;
 
-const storage = await createStorage();
-
-const uploadFile = async (file: File, key: string) => {
+const uploadFile = async (
+  file: File,
+  key: string,
+  storage: NonNullable<Awaited<ReturnType<typeof createStorage>>>
+) => {
   return await storage.put(key, file, {
     httpMetadata: {
       contentType: file.type,
@@ -52,8 +54,16 @@ const app = new Hono().post(
       );
     }
 
+    const storage = await createStorage();
+    if (!storage) {
+      return c.json(
+        { message: "存储服务未启用（请在 Cloudflare 启用 R2 后重新部署）" },
+        503
+      );
+    }
+
     const key = `${c.get("user").id}/${type}/${randomString()}.${file.type.split("/")[1]}`;
-    const { size } = await uploadFile(file, key);
+    const { size } = await uploadFile(file, key, storage);
 
     return c.json({
       message: "文件上传成功",
